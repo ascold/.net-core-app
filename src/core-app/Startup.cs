@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Routing;
 
 namespace core_app
 {
@@ -29,6 +30,7 @@ namespace core_app
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvcCore();
             services.AddSingleton(Configuration);
             services.AddSingleton<IGreeter, BasicGreeter>();
         }
@@ -41,16 +43,31 @@ namespace core_app
         {
             loggerFactory.AddConsole();
 
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.Run(async (context) =>
+            else
             {
-                var message = greeter.GetGreeting();
-                await context.Response.WriteAsync(message);
-            });
+                app.UseExceptionHandler(new ExceptionHandlerOptions
+                {
+                    ExceptionHandlingPath = "/error"
+                });
+            }
+
+            app.UseFileServer();
+
+            app.UseMvc(ConfigureRoutes);
+
+            app.Run(ctx => ctx.Response.WriteAsync("Not found"));
+
+        }
+
+        private void ConfigureRoutes(IRouteBuilder routeBuilder)
+        {
+            routeBuilder.MapRoute("Default",
+                "{controller=Home}/{action=Index}/{id?}");
         }
     }
 }
