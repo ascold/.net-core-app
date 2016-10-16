@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace core_app.Controllers
+namespace CoreApp.Controllers
 {
     [Route("[controller]/[action]")]
     public class AboutController
