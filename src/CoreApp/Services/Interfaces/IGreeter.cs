@@ -1,4 +1,4 @@
-﻿namespace CoreApp
+﻿namespace CoreApp.Services.Interfaces
 {
     public interface IGreeter
     {

@@ -1,0 +1,24 @@
+﻿@model CoreApp.ViewModels.HomePageViewModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Core App</title>
+</head>
+<body>
+    <h1>Welcome</h1>
+    <h3>@Model.CurrentMessage</h3>
+    <table>
+        @foreach (var restaurant in Model.Restaurants)
+        {
+            <tr>
+                <td>
+                    <a href="/home/details/@restaurant.Id">Details</a>
+                    @Html.ActionLink("View", "Details", new { id = restaurant.Id})
+                </td>
+                <td>@restaurant.Name</td>
+            </tr>
+        }
+    </table>
+</body>
+</html>

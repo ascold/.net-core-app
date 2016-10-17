@@ -1,6 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CoreApp.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 
-namespace CoreApp
+namespace CoreApp.Services
 {
     public class BasicGreeter : IGreeter
     {
