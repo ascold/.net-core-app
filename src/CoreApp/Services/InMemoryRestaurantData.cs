@@ -4,14 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CoreApp.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CoreApp.Services
 {
     public class InMemoryRestaurantData : IRestaurantData
     {
-        private List<Restaurant> _restaurants = null;
+        static List<Restaurant> _restaurants = null;
 
-        public InMemoryRestaurantData()
+        static InMemoryRestaurantData()
         {
             _restaurants = new List<Restaurant>
             {
@@ -21,11 +22,21 @@ namespace CoreApp.Services
             };
         }
 
+        public Restaurant Add(Restaurant newRestaurant)
+        {
+            newRestaurant.Id = _restaurants.Max(r=>r.Id) + 1;
+            _restaurants.Add(newRestaurant);
+
+            return newRestaurant;
+        }
+
+        [HttpGet]
         public Restaurant Get(int id)
         {
             return _restaurants.FirstOrDefault(restaurant => restaurant.Id == id);
         }
 
+        [HttpPost]
         public IEnumerable<Restaurant> GetAll()
         {
             return _restaurants;

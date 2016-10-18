@@ -10,5 +10,6 @@ namespace CoreApp.Services.Interfaces
     {
         IEnumerable<Restaurant> GetAll();
         Restaurant Get(int id);
+        Restaurant Add(Restaurant newRestaurant);
     }
 }
