@@ -1,17 +1,12 @@
-﻿@using CoreApp.Controllers
-@model CoreApp.Entities.Restaurant
+﻿@model CoreApp.Entities.Restaurant
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Restaurant details</title>
-</head>
-<body>
-    <h1>@Model.Name</h1>
-    
-    <div>Id: @Model.Id</div>
-    <div>Cuisine: @Model.Cuisine</div>
+@{
+    ViewBag.Title = Model.Name;
+}
 
-    <div>@Html.ActionLink("Home", nameof(HomeController.Index))</div>
-</body>
-</html>
+<h1>@Model.Name</h1>
+
+<div>Id: @Model.Id</div>
+<div>Cuisine: @Model.Cuisine</div>
+
+<div>@Html.ActionLink("Home", nameof(HomeController.Index))</div>

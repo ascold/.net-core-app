@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Routing;
 using CoreApp.Services;
 using CoreApp.Services.Interfaces;
+using CoreApp.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreApp
 {
@@ -31,7 +33,9 @@ namespace CoreApp
             services.AddMvc();
             services.AddSingleton(Configuration);
             services.AddSingleton<IGreeter, BasicGreeter>();
-            services.AddScoped<IRestaurantData, InMemoryRestaurantData>();
+            services.AddScoped<IRestaurantData, SqlServerRestaurantData>();
+            services.AddDbContext<CoreAppDbContext>(options => 
+                        options.UseSqlServer(Configuration.GetConnectionString("CoreAppConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -30,13 +30,16 @@ namespace CoreApp.Services
             return newRestaurant;
         }
 
-        [HttpGet]
+        public void Commit()
+        {
+            throw new NotImplementedException();
+        }
+
         public Restaurant Get(int id)
         {
             return _restaurants.FirstOrDefault(restaurant => restaurant.Id == id);
         }
 
-        [HttpPost]
         public IEnumerable<Restaurant> GetAll()
         {
             return _restaurants;

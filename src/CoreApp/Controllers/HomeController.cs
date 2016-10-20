@@ -7,20 +7,17 @@ namespace CoreApp.Controllers
 {
     public class HomeController: Controller
     {
-        private IGreeter _greeter;
         private IRestaurantData _restaurantData;
 
         public HomeController(IRestaurantData restaurantData, IGreeter greeter)
         {
             _restaurantData = restaurantData;
-            _greeter = greeter;
         }
 
         public IActionResult Index()
         {
             var model = new HomePageViewModel
             {
-                CurrentMessage = _greeter.GetGreeting(),
                 Restaurants = _restaurantData.GetAll()
             };
 
@@ -40,23 +37,61 @@ namespace CoreApp.Controllers
         }
 
         [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var model = _restaurantData.Get(id);
+
+            if (model == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, RestaurantEditViewModel model)
+        {
+            var restaurant = _restaurantData.Get(id);
+
+            if (ModelState.IsValid)
+            {
+                restaurant.Name = model.Name;
+                restaurant.Cuisine = model.Cuisine;
+
+                _restaurantData.Commit();
+
+                return RedirectToAction("Details", new { id = restaurant.Id });
+            }
+
+            return View(restaurant);
+        }
+
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(RestaurantEditViewModel model)
         {
-            var newRestaurant = new Restaurant
+            if (ModelState.IsValid)
             {
-                Name = model.Name,
-                Cuisine = model.Cuisine
-            };
+                var newRestaurant = new Restaurant
+                {
+                    Name = model.Name,
+                    Cuisine = model.Cuisine
+                };
 
-            newRestaurant = _restaurantData.Add(newRestaurant);
+                newRestaurant = _restaurantData.Add(newRestaurant);
+                _restaurantData.Commit();
+                return RedirectToAction("Details", new { id = newRestaurant.Id });
+            }
 
-            return View("Details", newRestaurant);
+            return View();
         }
     }
 }
