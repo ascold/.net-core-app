@@ -9,6 +9,8 @@ using CoreApp.Services;
 using CoreApp.Services.Interfaces;
 using CoreApp.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using CoreApp.Middleware;
 
 namespace CoreApp
 {
@@ -36,6 +38,7 @@ namespace CoreApp
             services.AddScoped<IRestaurantData, SqlServerRestaurantData>();
             services.AddDbContext<CoreAppDbContext>(options => 
                         options.UseSqlServer(Configuration.GetConnectionString("CoreAppConnection")));
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<CoreAppDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,10 +64,11 @@ namespace CoreApp
 
             app.UseFileServer();
 
+            app.UseNodeModules(env.ContentRootPath);
+
+            app.UseIdentity();
+
             app.UseMvc(ConfigureRoutes);
-
-            app.Run(ctx => ctx.Response.WriteAsync("Not found"));
-
         }
 
         private void ConfigureRoutes(IRouteBuilder routeBuilder)
